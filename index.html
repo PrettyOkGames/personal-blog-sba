@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <section class="m-[20px_0_0_20px]">
+        <form action="">
+            <label>Title</label><br>
+            <input type="text" id="post-title-input" class="border p-[0_7.5px_0_7.5px] w-[350px]"><br>
+            <label for="">Post Description</label><br>
+            <textarea name="" id="post-desc-input" class="border w-[350px] h-[250px] p-[7.5px]"></textarea><br>
+            <button class="border" id="submit-post-btn">Submit</button>
+        </form>
+    </section>
+    <section id="postsSection">
+        <section class="p-[0_100px_0_100px] mt-[20px]">
+            <section class="flex">
+                <h1 class="text-[2em]">Post Title</h1>
+                <button onclick="editPost()" class="ml-[12px] mt-[12px] border rounded-[4px] w-[50px] h-[25px] bg-[#ffffff] hover:bg-[#dbdbdb] focus:bg-[#cccccc]">Edit</button>
+            </section>
+            <p>This is the post content. This is the post content.
+                This is the post content. This is the post content.
+                This is the post content. This is the post content.
+            </p><br><hr>
+        </section>
+    </section>
+</body>
+</html>
