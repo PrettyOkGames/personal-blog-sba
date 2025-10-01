@@ -7,7 +7,7 @@ let postsSection = document.getElementById("postsSection")
 
 let postToEdit = null
 
-submitPostButton.addEventListener('click', () => {
+submitPostButton.addEventListener('click', (event) => {
     event.preventDefault()
     let errorMessage = ""
     if (postTitleInput.value == "") {
@@ -28,34 +28,51 @@ submitPostButton.addEventListener('click', () => {
             localStorage.setItem("postsCreated", 1)
         }
         let postNumber = parseInt(localStorage.getItem("postsCreated"))
-        let postToSubmit = {postNumber: postNumber++, postTitle: postTitleInput.value, postDesc: postDescInput.value}
         if (postToEdit == null) {
-            submittedPosts.push(postToSubmit)
             let newPost = document.createElement("section")
             let newPostTitleBtnContainer = document.createElement("section")
             let newPostTitle = document.createElement("h1")
-            let newPostBtn = document.createElement("button")
+            let newPostEditBtn = document.createElement("button")
+            let newPostDeleteBtn = document.createElement("button")
             let newPostDescription = document.createElement("p")
+            let lineBreak = document.createElement("hr")
             newPost.setAttribute("class", "p-[0_100px_0_100px] mt-[20px]")
             newPostTitleBtnContainer.setAttribute("class", "flex")
             newPostTitle.setAttribute("class", "text-[2em]")
-            newPostBtn.setAttribute("class", "ml-[12px] mt-[12px] border rounded-[4px] w-[50px] h-[25px] bg-[#ffffff] hover:bg-[#dbdbdb] focus:bg-[#cccccc]")
-            newPostBtn.innerHTML = `Edit`
+            newPostEditBtn.setAttribute("class", "ml-[12px] mt-[12px] border rounded-[4px] w-[50px] h-[25px] bg-[#ffffff] hover:bg-[#dbdbdb] focus:bg-[#cccccc]")
+            newPostEditBtn.setAttribute("onClick", "editPost()")
+            newPostEditBtn.innerHTML = `Edit`
+            newPostDeleteBtn.setAttribute("class", "ml-[12px] mt-[12px] border rounded-[4px] w-[50px] h-[25px] bg-[#ffffff] hover:bg-[#dbdbdb] focus:bg-[#cccccc]")
+            newPostDeleteBtn.setAttribute("onClick", "removePost()")
+            newPostDeleteBtn.innerHTML = `Delete`
             newPostTitle.innerHTML = postTitleInput.value
-            newPostDescription.innerHTML = `${postDescInput.value}<hr class="mt-[15px]">`
-            newPostBtn.onclick = editPost
+            newPostDescription.innerText = `${postDescInput.value}`
+            lineBreak.setAttribute("class", "mt-[15px] newLineBreak")
             newPostTitleBtnContainer.appendChild(newPostTitle)
-            newPostTitleBtnContainer.appendChild(newPostBtn)
+            newPostTitleBtnContainer.appendChild(newPostEditBtn)
+            newPostTitleBtnContainer.appendChild(newPostDeleteBtn)
             newPost.appendChild(newPostTitleBtnContainer)
             newPost.appendChild(newPostDescription)
+            newPost.appendChild(lineBreak)
             postsSection.appendChild(newPost)
             postTitleInput.value = ""
             postDescInput.value = ""
-            postToSubmit.postContainer = newPost
-            //console.log(`Post Number ${postToSubmit.postNumber}`)
+            if (!localStorage.getItem("savedPosts")) {
+                localStorage.setItem("savedPosts", "")
+            }
+            localStorage.setItem("savedPosts", postsSection.innerHTML)
+            
         }
         else {
-            postToEdit.postContainer.firstElementChild.firstElementChild.innerText = postTitleInput.value
+            postToEdit.firstElementChild.firstElementChild.innerText = postTitleInput.value
+            postToEdit.children[1].innerText = postDescInput.value
+            postTitleInput.value = ""
+            postDescInput.value = ""
+            postToEdit = null
+            if (!localStorage.getItem("savedPosts")) {
+                localStorage.setItem("savedPosts", "")
+            }
+            localStorage.setItem("savedPosts", postsSection.innerHTML)
         }
     }
 });
@@ -64,11 +81,18 @@ function editPost() {
     let postToEditDesc = document.activeElement.parentElement.nextElementSibling
     postTitleInput.value = postToEditTitle.innerText
     postDescInput.value = postToEditDesc.innerText
-    for (let i = 0; i < submittedPosts.length; i++) {
-        if (submittedPosts[i].postTitle == postToEditTitle && submittedPosts[i].postDesc == postToEditDesc) {
-            postToEdit = submittedPosts[i]
-            console.log(postToEdit.postTitle)
-        }
-    }
+    postToEdit = document.activeElement.parentElement.parentElement
     document.activeElement.blur()
+}
+function removePost() {
+    let postToRemove = document.activeElement.parentElement.parentElement
+    postsSection.removeChild(postToRemove)
+    if (!localStorage.getItem("savedPosts")) {
+        localStorage.setItem("savedPosts", "")
+    }
+    localStorage.setItem("savedPosts", postsSection.innerHTML)
+}
+
+if (localStorage.getItem("savedPosts")) {
+    postsSection.innerHTML = localStorage.getItem("savedPosts")
 }
